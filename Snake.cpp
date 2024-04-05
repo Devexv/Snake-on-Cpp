@@ -1,6 +1,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <ctime>
 
 using namespace std;
 
@@ -12,6 +13,8 @@ int tailX[100], tailY[100];
 int nTail;
 enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
 eDirection dir;
+time_t startTime;
+const int timeLimitSeconds = 60; // Set the time limit to 60 seconds
 
 void Setup() {
     gameOver = false;
@@ -21,6 +24,8 @@ void Setup() {
     fruitX = rand() % width;
     fruitY = rand() % height;
     score = 0;
+    nTail = 0;
+    startTime = time(NULL); // Get current time
 }
 
 void Draw() {
@@ -76,9 +81,6 @@ void Input() {
         case 's':
             dir = DOWN;
             break;
-        case 'x':
-            gameOver = true;
-            break;
         }
     }
 }
@@ -126,6 +128,10 @@ void Logic() {
         fruitY = rand() % height;
         nTail++;
     }
+
+    time_t currentTime = time(NULL);
+    if (difftime(currentTime, startTime) >= timeLimitSeconds)
+        gameOver = true;
 }
 
 int main() {
@@ -136,5 +142,6 @@ int main() {
         Logic();
         Sleep(10); //sleep(10) for Linux/Mac
     }
+    cout << "Game over! Time's up!" << endl;
     return 0;
 }
