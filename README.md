@@ -25,5 +25,5 @@ This is a simple console-based Snake game implemented in C.
 1. Clone this repository to your local machine.
 2. Compile the source code (`snake.c`) using a C compiler. For example:
    ```sh
-   gcc -o snake snake.c
+   gcc -o snake Snake.c
    ```
