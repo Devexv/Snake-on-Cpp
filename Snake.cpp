@@ -1,24 +1,21 @@
-#include <stdio.h>
+#include <iostream>
 #include <conio.h>
-#include <stdlib.h>
 #include <windows.h>
-#include <time.h>
 
-#define width 20
-#define height 20
-#define UP 72
-#define DOWN 80
-#define LEFT 75
-#define RIGHT 77
+using namespace std;
 
-int x, y, fruitX, fruitY, score, gameover;
+bool gameOver;
+const int width = 20;
+const int height = 20;
+int x, y, fruitX, fruitY, score;
 int tailX[100], tailY[100];
 int nTail;
-int dir;
+enum eDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
+eDirection dir;
 
-void setup() {
-    gameover = 0;
-    dir = RIGHT;
+void Setup() {
+    gameOver = false;
+    dir = STOP;
     x = width / 2;
     y = height / 2;
     fruitX = rand() % width;
@@ -26,44 +23,45 @@ void setup() {
     score = 0;
 }
 
-void draw() {
+void Draw() {
     system("cls");
     for (int i = 0; i < width + 2; i++)
-        printf("#");
-    printf("\n");
+        cout << "#";
+    cout << endl;
 
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             if (j == 0)
-                printf("#");
+                cout << "#";
             if (i == y && j == x)
-                printf("O");
+                cout << "O";
             else if (i == fruitY && j == fruitX)
-                printf("F");
+                cout << "F";
             else {
-                int print = 0;
+                bool print = false;
                 for (int k = 0; k < nTail; k++) {
                     if (tailX[k] == j && tailY[k] == i) {
-                        printf("o");
-                        print = 1;
+                        cout << "o";
+                        print = true;
                     }
                 }
                 if (!print)
-                    printf(" ");
+                    cout << " ";
             }
+
             if (j == width - 1)
-                printf("#");
+                cout << "#";
         }
-        printf("\n");
+        cout << endl;
     }
 
     for (int i = 0; i < width + 2; i++)
-        printf("#");
-    printf("\n");
-    printf("Score: %d\n", score);
+        cout << "#";
+    cout << endl;
+    cout << "Score:" << score << endl;
 }
 
-void input() {
+void Input() {
     if (_kbhit()) {
         switch (_getch()) {
         case 'a':
@@ -79,13 +77,13 @@ void input() {
             dir = DOWN;
             break;
         case 'x':
-            gameover = 1;
+            gameOver = true;
             break;
         }
     }
 }
 
-void logic() {
+void Logic() {
     int prevX = tailX[0];
     int prevY = tailY[0];
     int prev2X, prev2Y;
@@ -120,7 +118,7 @@ void logic() {
 
     for (int i = 0; i < nTail; i++)
         if (tailX[i] == x && tailY[i] == y)
-            gameover = 1;
+            gameOver = true;
 
     if (x == fruitX && y == fruitY) {
         score += 10;
@@ -131,12 +129,12 @@ void logic() {
 }
 
 int main() {
-    setup();
-    while (!gameover) {
-        draw();
-        input();
-        logic();
-        Sleep(10); //sleep(10);
+    Setup();
+    while (!gameOver) {
+        Draw();
+        Input();
+        Logic();
+        Sleep(10); //sleep(10) for Linux/Mac
     }
     return 0;
 }
